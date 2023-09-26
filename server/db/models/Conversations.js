@@ -1,5 +1,7 @@
-const bcrypt = require('bcryptjs');
-const mongoose = require('mongoose');
+// const bcrypt = require('bcryptjs');
+// const mongoose = require('mongoose');
+import bcrypt from "bcrypt"
+import mongoose from "mongoose";
 
 const conversationSchema = mongoose.Schema({
    members: {
@@ -8,4 +10,5 @@ const conversationSchema = mongoose.Schema({
    }
 })
 const Conversation = mongoose.model('Conversation', conversationSchema);
-module.exports = Conversation;
+
+export default Conversation;

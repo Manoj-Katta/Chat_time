@@ -1,5 +1,7 @@
-const bcrypt = require('bcryptjs');
-const mongoose = require('mongoose');
+import bcrypt from "bcrypt"
+import mongoose from "mongoose";
+// const bcrypt = require('bcrypt');
+// const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
     fullName:{
@@ -19,11 +21,26 @@ const userSchema = mongoose.Schema({
     }
 })
 
-userSchema.pre('save', async function(){
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password,salt);
+userSchema.pre('save', async function(next){
+    try{
+        if(this.isNew){
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(this.password,salt)
+            this.password = hashedPassword
+        }
+        next()
+    }   
+    catch(error){
+        return next(error)
+    }
 })
 
-const Users=mongoose.model('User',userSchema);
+// userSchema.methods.comparePassword = async function(candidatePassword){
+//     const isMatch = await bcrypt.compare(candidatePassword,this.password);
+//     return isMatch;
+// }
 
-module.exports = Users;
+const Users = mongoose.model('User',userSchema);
+
+// module.exports = Users;
+export default Users
