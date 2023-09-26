@@ -82,7 +82,7 @@ app.get("/", function (req, res) {
   res.send("Welcome");
 });
 
-app.post('/api/register', async(req,res,next) =>{
+app.post('/api/register', async(req,res) =>{
     try{
         var {fullName, email, password}= req.body;
         if(!fullName || !email || !password){
@@ -102,7 +102,6 @@ app.post('/api/register', async(req,res,next) =>{
                 // })
                 const newUser = await Users.create({fullName,email,password});
                 await newUser.save()
-                next()
                 return res.status(200).send("User registered successfully!");
             }
         }
@@ -122,9 +121,9 @@ app.post('/api/login', async (req, res,next) => {
             if (!user) {
                 res.status(400).send('User email or password is incorrect');
             } else {
-                // const validateUser = await bcrypt.compare(user.password,password );
+                const validateUser = await bcrypt.compare(password, user.password);
                 // console.log(password)
-                const validateUser = true;
+                // const validateUser = true;
                 if (!validateUser) {
                     res.status(400).send('User email or password is incorrect');
                 } else {
