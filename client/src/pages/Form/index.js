@@ -13,6 +13,7 @@ const Form = ({ isSignInPage = true }) => {
     password: "",
   });
   const navigate = useNavigate();
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("data>>", data);

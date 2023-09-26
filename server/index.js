@@ -10,13 +10,17 @@ import Messages from "./db/models/Messages.js"
 import jwt from "jsonwebtoken";
 import cors from "cors"
 import {Server} from "socket.io"
-
 const io=new Server(6000,{
     cors:{
         origin:"http://localhost:3000",
     }
 })
+
+// app use
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 
 const port = process.env.PORT || 7000;
 const url = process.env.MONGO_URL;
@@ -73,16 +77,12 @@ mongoose
   .then(() => console.log("Connected to DB"))
   .catch((e) => console.log("Error", e));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cors());
-
 
 app.get("/", function (req, res) {
-  res.send("API");
+  res.send("Welcome");
 });
 
-app.post('/api/register', async(req,res) =>{
+app.post('/api/register', async(req,res,next) =>{
     try{
         var {fullName, email, password}= req.body;
         if(!fullName || !email || !password){
@@ -94,9 +94,15 @@ app.post('/api/register', async(req,res) =>{
                 res.status(400).send("User already exists");
             }
             else{
+                // const newUser = new Users({ fullName, email });
+                // bcrypt.hash(password, 10, (err, hashedPassword) => {
+                //     newUser.set('password', hashedPassword);
+                //     newUser.save();
+                //     next();
+                // })
                 const newUser = await Users.create({fullName,email,password});
                 await newUser.save()
-                // next()
+                next()
                 return res.status(200).send("User registered successfully!");
             }
         }
@@ -105,11 +111,7 @@ app.post('/api/register', async(req,res) =>{
     }
 })
 
-app.listen(port, () => {
-  console.log(`Server running on ${port}`);
-});
-
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', async (req, res,next) => {
     try {
         const { email, password } = req.body;
 
@@ -120,8 +122,8 @@ app.post('/api/login', async (req, res) => {
             if (!user) {
                 res.status(400).send('User email or password is incorrect');
             } else {
-                // const validateUser = await bcrypt.compare(password, user.password);
-                console.log(password)
+                // const validateUser = await bcrypt.compare(user.password,password );
+                // console.log(password)
                 const validateUser = true;
                 if (!validateUser) {
                     res.status(400).send('User email or password is incorrect');
@@ -176,9 +178,9 @@ app.get('/api/conversations/:userId', async (req, res) => {
 
 app.post('/api/message', async (req, res) => {
     try {
-        const { conversationId, senderId, message, receiverId} = req.body;
+        const { conversationId, senderId, message, receiverId=''} = req.body;
         if(!senderId || !message) return res.status(400).send('Please fill all the required fields');
-        if(!conversationId && receiverId ){
+        if(!conversationId=='new' && receiverId ){
             const newConversation= new Conversations({members:[senderId,receiverId]});
             await newConversation.save();
             const newMessage=new Messages({conversationId:newConversation._id,senderId,message});
@@ -236,3 +238,9 @@ app.get('/api/users/:userId', async (req, res) => {
         console.log('Error', error)
     }
 })
+
+app.listen(port, () => {
+    console.log(`Server running on ${port}`);
+  });
+  
+  

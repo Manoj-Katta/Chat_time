@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import Avatar from "../../assets/avatar.png";
 import Input from "../../components/Input";
 import {io} from "socket.io-client"
@@ -17,7 +17,7 @@ const Chat = () => {
   const [messages,setMessages] = useState([]);
   const [message,setMessage] = useState([]);
   const [socket,setSocket] = useState(null);
-
+  const messageRef = useRef(null);
   useEffect(() => {
     setSocket(io())
 }, [])
@@ -35,6 +35,10 @@ useEffect(() => {
     })
 }, [socket])
   
+  useEffect(()=>{
+    messageRef?.current?.scrollIntoView({ behavior: 'smooth' })
+	}, [messages?.messages])
+
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("user:detail"));
     const fetchConversations = async () => {
@@ -53,8 +57,8 @@ useEffect(() => {
     fetchConversations();
   }, []);
 
-  console.log("user : >>", user);
-  console.log("users : >>", users);
+  // console.log("user : >>", user);
+  // console.log("users : >>", users);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -102,8 +106,6 @@ const sendMessage = async (e) => {
         })
     });
 }
-
-
 
   return (
     <div className="w-screen flex">
@@ -159,7 +161,7 @@ const sendMessage = async (e) => {
           </div>
           <div className="ml-8">
             <h3 className="text-2xl">{user?.fullName}</h3>
-            <p className="text-lg font-light"></p>
+            <p className="text-lg font-light">My Account</p>
           </div>
         </div>
         <hr />
@@ -171,19 +173,19 @@ const sendMessage = async (e) => {
             {   conversations.length>0 ?
                 conversations.map(({ conversationId,user}) => {
               return (
-                <div className="flex items-center my-8 border-b-gray-300">
-                  <div className="cursor-pointer flex items-center" onClick={()=>{
-                    fetchMessages()
-                  }}></div>
+                <div className="flex items-center py-8 border-b-gray-300">
+                  <div className="cursor-pointer flex items-center" onClick={()=>
+                    fetchMessages(conversationId, user)
+                  }></div>
                   <div className="cursor-pointer">
                     <img
                       src={Avatar}
-                      width={50}
-                      height={50}
-                      className="border border-primary p-[2px] rounded-full"
+                      // width={50}
+                      // height={50}
+                      className="w-[60px] h-[60px] border border-primary p-[2px] rounded-full"
                     />
                   </div>
-                  <div className="ml-8">
+                  <div className="ml-6">
                     <h3 className="text-2xl">{user?.fullName}</h3>
                     <p className="text-sm font-light">{user?.email}</p>
                   </div>
@@ -235,7 +237,7 @@ const sendMessage = async (e) => {
 									return (
 										<>
 										<div className={`max-w-[40%] rounded-b-xl p-4 mb-6 ${id === user?.id ? 'bg-primary text-white rounded-tl-xl ml-auto' : 'bg-secondary rounded-tr-xl'} `}>{message}</div>
-										{/* <div ref={messageRef}></div> */}
+										<div ref={messageRef}></div>
 										</>
 									)
 								}) : <div className='text-center text-lg font-semibold mt-24'>No Messages or No Conversation Selected</div>
