@@ -4,6 +4,7 @@ import Avatar from "../../assets/avatar.png";
 import Input from "../../components/Input";
 import { useEffect, setConversations } from "react";
   
+
 const Chatbot=()=>{
     const [message,setMessage] = useState([]);
 
@@ -160,7 +161,7 @@ const Chatbot=()=>{
                   <path d="M21 3l-6.5 18a0.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a0.55 .55 0 0 1 0 -1l18 -6.5" />
                 </svg>
               </div>
-              <div className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${!message && 'pointer-events-none'}`}>
+              {/* <div className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${!message && 'pointer-events-none'}`}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="icon icon-tabler icon-tabler-circle-plus "
@@ -178,7 +179,7 @@ const Chatbot=()=>{
                   <line x1="9" y1="12" x2="15" y2="12" />
                   <line x1="12" y1="9" x2="12" y2="15" />
                 </svg>
-              </div>
+              </div> */}
             </div>
             }
           </div>

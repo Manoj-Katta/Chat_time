@@ -1,6 +1,3 @@
-// const bcrypt = require('bcryptjs');
-// const mongoose = require('mongoose');
-import bcrypt from "bcrypt"
 import mongoose from "mongoose";
 
 const conversationSchema = mongoose.Schema({

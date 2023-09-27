@@ -149,7 +149,7 @@ const sendMessage = async (e) => {
       </div>
       </div>
       
-      <div className="w-[20%] h-screen bg-secondary overflow-scroll">
+      <div className="w-[22%] h-screen bg-secondary overflow-scroll">
         <div className="flex items-center my-4 ml-2 ">
           <div>
             <img
@@ -295,7 +295,7 @@ const sendMessage = async (e) => {
         </div>
         }
       </div>
-      <div className="w-[20%] h-screen bg-light px-3 py-4 overflow-scroll ">
+      <div className="w-[18%] h-screen bg-light px-3 py-4 overflow-scroll ">
       <div className='text-primary text-lg'>People</div>
       <div>
         {

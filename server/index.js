@@ -122,8 +122,6 @@ app.post('/api/login', async (req, res,next) => {
                 res.status(400).send('User email or password is incorrect');
             } else {
                 const validateUser = await bcrypt.compare(password, user.password);
-                // console.log(password)
-                // const validateUser = true;
                 if (!validateUser) {
                     res.status(400).send('User email or password is incorrect');
                 } else {
@@ -182,7 +180,7 @@ app.post('/api/message', async (req, res) => {
         if(!conversationId=='new' && receiverId ){
             const newConversation= new Conversations({members:[senderId,receiverId]});
             await newConversation.save();
-            const newMessage=new Messages({conversationId:newConversation._id,senderId,message});
+            const newMessage=new Messages({conversationId:newConversation._id,senderId,message,receiverId});
             await newMessage.save();
             return res.status(200).send('Message sent successfully');
         }
@@ -203,7 +201,7 @@ app.get('/api/message/:conversationId', async (req, res) => {
         const checkMessages = async (conversationId) => {
             console.log(conversationId, 'conversationId')
             const messages = await Messages.find({ conversationId });
-            const messageUserData = Promise.all(messages.map(async (message) => {
+            const messageUserData =Promise.all(messages.map(async (message) => {
                 const user = await Users.findById(message.senderId);
                 return { user: { id: user._id, email: user.email, fullName: user.fullName }, message: message.message }
             }));
