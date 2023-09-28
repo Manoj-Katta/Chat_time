@@ -38,7 +38,7 @@ https://github.com/Manoj-Katta/Chat_time
 Install dependencies
 
 ```bash
-cd client;
+cd client
 npm install
 cd ../server
 npm install
@@ -46,7 +46,7 @@ npm install
 
 To run the web app locally, use the following commands:
 ```bash
-cd client;
-npm run start;
-cd server;
-nodemon index.js;
+cd client
+npm run start
+cd server
+nodemon index.js
